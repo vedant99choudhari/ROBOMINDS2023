@@ -8,9 +8,9 @@ public double SampleTime,ki,kp,kd,outputSum,outMax,outMin,output,lastInput,lastT
 Pid2023()
 {
  SampleTime =0.004;
- ki=0.1;
- kp=0.1;
- kd=0.1;
+ ki=0.01;
+ kp=0.07;
+ kd=0.17;
  outputSum = 0;
  outMax=0.8;
  outMin=-0.8;
