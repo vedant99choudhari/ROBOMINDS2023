@@ -98,7 +98,7 @@ public class Main extends LinearOpMode {
 
 
         movement = new DriveFunctions(mecanum,gyro,this,hardwareMap);
-        boolean flag = false;
+        boolean flag = true;
         gyro.TargetAngle = 0.0;
         while((opModeIsActive() && flag)){
             arm1.setTargetPosition(arm1_target);

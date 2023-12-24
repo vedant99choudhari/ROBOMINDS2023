@@ -41,10 +41,13 @@ public class cameraTest1 extends LinearOpMode {
     myVisionPortalBuilder.addProcessor(myAprilTagProcessor);
     // Create a VisionPortal by calling build.
     myVisionPortal = myVisionPortalBuilder.build();
-    
+
     while (!isStopRequested()) {
-      telemetryAprilTag();
-      telemetry.addData("object detected", detection.count >1000);
+      // telemetryAprilTag();
+      telemetry.addData("object detected", detection.centerCount );
+      telemetry.addData("object detected", detection.rightCount );
+      telemetry.addData("object detected", detection.getPosition() );
+
       telemetry.update();
     }
   }

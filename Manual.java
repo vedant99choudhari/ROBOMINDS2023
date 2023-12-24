@@ -52,13 +52,13 @@ public class Manual extends LinearOpMode{
         arm2.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
         arm1.setDirection(DcMotorEx.Direction.REVERSE);
         ControlHub_VoltageSensor = hardwareMap.get(VoltageSensor.class, "Control Hub");
-        
+
         String [] motorConfig = {"FR","FL","BR","BL"};
         mecanum = new Drive2023(hardwareMap, motorConfig);
-        
+
         StaticVars vars = new StaticVars(telemetry,"RED");
-        
-        
+
+
         mecanum.setMotorMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
         mecanum.setMotorMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
         gyro = new Gyro2023(hardwareMap, mecanum);
@@ -76,36 +76,36 @@ public class Manual extends LinearOpMode{
             move();
             telemetry.update();
         }
-        
-        
+
+
     }
     void arm(){
         telemetry.addData("level", level);
         if(fallingEdge(() -> this.gamepad2.left_bumper)){
             if(left_open){
-                left.setPosition(0.35);
-                
+                left.setPosition(0.5);
+
                 left_open = false;
             }
             else{
-              left.setPosition(0.9);
-                left_open = true;  
+                left.setPosition(0.25);
+                left_open = true;
             }
-            
+
         }
         if(fallingEdge(() -> this.gamepad2.right_bumper)){
             if(right_open){
-                right.setPosition(0.5);
-    
+                right.setPosition(0.55);
+
                 right_open = false;
             }
             else{
-              right.setPosition(0);
-                right_open = true;  
+                right.setPosition(0.35);
+                right_open = true;
             }
-            
+
         }
-        
+
         if(fallingEdge(() -> this.gamepad2.a)){
             if(level <= 5){
                 level++;
@@ -121,8 +121,8 @@ public class Manual extends LinearOpMode{
                 arm1_target = 0;
                 arm2_target = 175;
                 arm3_target =  0.6;
-                }
-                break;
+            }
+            break;
             case 2:{
                 arm1_target = 0;
                 arm2_target = 205;
@@ -154,7 +154,7 @@ public class Manual extends LinearOpMode{
             }
             break;
             default:
-            
+
         }
         if(fallingEdge(() -> this.gamepad2.x)){
             arm3.setPosition(0.2);
@@ -162,179 +162,129 @@ public class Manual extends LinearOpMode{
             while(level>=1){
                 level--;
                 while(must() && arm2.isBusy()){
-                
+
                 }
             }
-            
+
             arm1_target = 0;
             arm2_target = 0;
             arm3_target = 0.2;
-            
+
         }
-       
-       if(fallingEdge(() -> this.gamepad2.y)){
-           arm3_target = 0.45;
-       }
-        
-        
+
+        if(fallingEdge(() -> this.gamepad2.y)){
+            arm3_target = 0.45;
+        }
+
+
     }
-    
+
     void move()
     {
-            double limit = 0.5;
-            double speed_y = limit*this.gamepad1.left_stick_y;
-            double speed_x = -limit *this.gamepad1.left_stick_x;
-            double speed_rotate =  - 0.25 *this.gamepad1.right_stick_x;
-            telemetry.addData("SpeedX", speed_x);
-            telemetry.addData("SpeedY", speed_y);
-            telemetry.update();
-            if(this.gamepad1.right_trigger > 0.3)
-            {
-                speed_y = speed_y/2;
-                speed_x = speed_x/2;
-                speed_rotate = speed_rotate /2;
-            }
-            else if(this.gamepad1.right_bumper)
-            {
-                speed_y = speed_y * 0.3;
-                speed_x = speed_x* 0.3;
-                speed_rotate = speed_rotate * 0.3;
-            }
+        double limit = 0.7;
+        double speed_y = limit*this.gamepad1.left_stick_y;
+        double speed_x = -limit *this.gamepad1.left_stick_x;
+        double speed_rotate =  - 0.4 *this.gamepad1.right_stick_x;
+        telemetry.addData("SpeedX", speed_x);
+        telemetry.addData("SpeedY", speed_y);
+        telemetry.update();
+        if(this.gamepad1.right_trigger > 0.3)
+        {
+            speed_y = speed_y/2;
+            speed_x = speed_x/2;
+            speed_rotate = speed_rotate /2;
+        }
+        else if(this.gamepad1.right_bumper)
+        {
+            speed_y = speed_y * 0.3;
+            speed_x = speed_x* 0.3;
+            speed_rotate = speed_rotate * 0.3;
+        }
 
-            double angle = Math.toDegrees( Math.atan2(speed_y,speed_x));
-            double speed = Math.sqrt(2) * Math.sqrt((speed_y*speed_y) + (speed_x *speed_x));
+        double angle = Math.toDegrees( Math.atan2(speed_y,speed_x));
+        double speed = Math.sqrt(2) * Math.sqrt((speed_y*speed_y) + (speed_x *speed_x));
 
-            double diagonal1 = -speed * Math.sin(Math.toRadians(angle+45));
-            double diagonal2 = speed * Math.cos(Math.toRadians(angle+45));
+        double diagonal1 = -speed * Math.sin(Math.toRadians(angle+45));
+        double diagonal2 = speed * Math.cos(Math.toRadians(angle+45));
+
+
+        if(Math.abs(speed_rotate) > 0.1)
+        {
+            mecanum.setPowers(speed_rotate,-speed_rotate,speed_rotate,-speed_rotate);
+        }
+        else
+        {
+            mecanum.setPowers(diagonal2, diagonal1, diagonal1, diagonal2);
+        }
+
+        if(fallingEdge(() -> this.gamepad1.b)){
+            gyro.TargetAngle = -90.0;
+            lock();
+        }
+        if(fallingEdge(() -> this.gamepad1.a)){
+            gyro.TargetAngle = 90.0;
+            lock();
+        }
+        if(fallingEdge(() -> this.gamepad1.x)){
+            gyro.TargetAngle = 45.0;
+            lock();
+
+        }
+        if(fallingEdge(() -> this.gamepad1.left_bumper)){
+            double angle_current = gyro.getOrientation();
+            double Quadrant = (Math.floor(angle_current /90));
             
-            
-            if(Math.abs(speed_rotate) > 0.1)
-            {
-            mecanum.setPowers(speed_rotate,-speed_rotate,speed_rotate,-speed_rotate); 
-            }
-            else
-            {
-                mecanum.setPowers(diagonal2, diagonal1, diagonal1, diagonal2);
-            }
-            
-            if(isButtonBPressed()){
-                gyro.TargetAngle = -90.0;
-                lock();
-            }
-            if(isButtonAPressed()){
-                gyro.TargetAngle = 90.0;
-                lock();
-            }
-            if(isButtonXPressed()){
-                gyro.TargetAngle = 45.0;
-                lock();
-                
-            }
-            if(fallingEdge(() -> this.gamepad1.left_bumper)){
-                double angle_current = gyro.getOrientation();
-                double Quadrant = (Math.floor(angle_current /90));
-                // if ( Quadrant == 1d)
-                //     gyro.TargetAngle = 175;
-                    
-                // else
-                    gyro.TargetAngle = (Quadrant +1)*90;
-                
-                lock();
-            
-                }
-            if(this.gamepad1.left_trigger > 0.3){
-                double angle_current = gyro.getOrientation();
-                double Quadrant = (Math.floor(angle_current /90));
-                // if ( Quadrant == -2d)
-                //     gyro.TargetAngle = -175;
-                    
-                // else
-                    gyro.TargetAngle = Quadrant*90;
-                
-                lock();
-            }
-            if(fallingEdge(() -> this.gamepad1.guide))gyro.reset();
+            gyro.TargetAngle = (Quadrant +1)*90;
+
+            lock();
+
+        }
+        if(this.gamepad1.left_trigger > 0.3){
+            double angle_current = gyro.getOrientation();
+            double Quadrant = (Math.floor(angle_current /90));
+            gyro.TargetAngle = Quadrant*90;
+
+            lock();
+        }
+        if(fallingEdge(() -> this.gamepad1.guide))gyro.reset();
     }
-    
+
     double getPowerForVoltage(double voltage){
         double power = voltage/ControlHub_VoltageSensor.getVoltage();
         telemetry.addData("Motor Power:" , power);
         return power;
     }
+
     
-    boolean isButtonAPressed(){
-        if(this.gamepad1.a){
-            while(this.gamepad1.a&& must()){
-                
-            }
-            return true;
-        }
-        
-        return false;
-    }
-    
-    boolean isButtonBPressed(){
-        if(this.gamepad1.b){
-            while(this.gamepad1.b&& must()){
-                
-            }
-            return true;
-        }
-        
-        return false;
-    }
-    boolean isButtonXPressed(){
-        if(this.gamepad1.x){
-            while(this.gamepad1.x&& must()){
-                
-            }
-            return true;
-        }
-        
-        return false;
-    }
-    
-    boolean isBumperLPressed(){
-        return fallingEdge(() -> this.gamepad1.left_bumper);
-    }
-    boolean isBumperRPressed(){
-        if(this.gamepad1.right_bumper){
-            while(this.gamepad1.right_bumper&& must()){
-                
-            }
-            return true;
-        }
-        
-        return false;
-    }
-    
+
     public boolean fallingEdge(Supplier<Boolean> button){
         if(button.get()){
             while(button.get()){
                 must();
+                
             }
             return true;
         }
         return false;
     }
     public boolean must(){
-       arm1.setTargetPosition(arm1_target);
+        arm1.setTargetPosition(arm1_target);
         arm2.setTargetPosition(arm2_target);
         arm1.setPower(getPowerForVoltage(3));
         arm2.setPower(getPowerForVoltage(3));
         arm1.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        arm2.setMode(DcMotor.RunMode.RUN_TO_POSITION); 
+        arm2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         telemetry.addData("Arm1", arm1.getCurrentPosition());
         telemetry.addData("Arm2", arm2.getCurrentPosition());
         telemetry.addData("Gyro val: ", gyro.getOrientation());
         telemetry.addData("Quadrant", Math.floor(gyro.getOrientation()/90));
         telemetry.addData("Target", gyro.TargetAngle);
         if(!(arm1.isBusy() || arm2.isBusy())){
-            double servo_target = gamepad2.right_trigger > 0.3 ? arm3_target +0.3 : arm3_target; 
+            double servo_target = gamepad2.right_trigger > 0.3 ? arm3_target +0.3 : arm3_target;
             arm3.setPosition(servo_target);
         }
-           
-        
+
+
         return opModeIsActive();
     }
     void lock(){
