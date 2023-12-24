@@ -1,10 +1,13 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorImplEx;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.PIDCoefficients;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
-import com.qualcomm.robotcore.hardware.PIDCoefficients;
+import com.qualcomm.robotcore.hardware.DcMotorImplEx;
+
+import com.qualcomm.robotcore.hardware.HardwareDevice;
 
 
 //Class for controlling the drive of the robot.
@@ -36,7 +39,7 @@ public class Drive2023 {
      * @return None
      */
     public void correctDirection() {
-        motors[0].setDirection(DcMotorSimple.Direction.REVERSE);
+        motors[1].setDirection(DcMotorSimple.Direction.REVERSE);
         motors[3].setDirection(DcMotorSimple.Direction.REVERSE);
      }
 
@@ -87,8 +90,6 @@ public class Drive2023 {
         for(int i =0 ;i <4 ; i++)
         {
             motors[i].setMode(mode);
-            StaticVars.telemetry.addData("motors[i]"," Done");
-            
         }
     }
     
