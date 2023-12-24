@@ -39,7 +39,7 @@ public class Drive2023 {
      * @return None
      */
     public void correctDirection() {
-        motors[1].setDirection(DcMotorSimple.Direction.REVERSE);
+        motors[0].setDirection(DcMotorSimple.Direction.REVERSE);
         motors[3].setDirection(DcMotorSimple.Direction.REVERSE);
      }
 

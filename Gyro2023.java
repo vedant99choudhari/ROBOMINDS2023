@@ -29,18 +29,17 @@ public class Gyro2023 {
     Pid2023 control = new Pid2023();
     public Gyro2023(HardwareMap hardwareMap, Drive2023 drive){
         imu = hardwareMap.get(IMU.class, "imu");
-        imu.initialize(new IMU.Parameters(new RevHubOrientationOnRobot(RevHubOrientationOnRobot.LogoFacingDirection.FORWARD, RevHubOrientationOnRobot.UsbFacingDirection.UP)));
-        imu.resetYaw();
-        mecanum = drive;
+        imu.initialize(new IMU.Parameters(new RevHubOrientationOnRobot(RevHubOrientationOnRobot.LogoFacingDirection.FORWARD, RevHubOrientationOnRobot.UsbFacingDirection.UP)));        mecanum = drive;
     }
     //TODO : setmode in anuglar lock?
     boolean angularLock()
     {
      
             double value = continousA();
-             
+            double error =  Math.abs(value-TargetAngle)  ;
+            telemetry.addData("Error: ", error);
             
-        return Math.abs(value-TargetAngle) > 2 ;
+        return error>2;
     }
     public double getOrientation() {
         YawPitchRollAngles orientation = imu.getRobotYawPitchRollAngles();
@@ -49,14 +48,16 @@ public class Gyro2023 {
     }
     
     double continousA()
+    //-0.35,-0.15 for manual
+    //-0.15,-0.1 for auto
     {
         mecanum.setMotorMode(DcMotor.RunMode.RUN_USING_ENCODER);
         double value = getOrientation();
         if(control.compute(value,TargetAngle,StaticVars.clock.seconds())){
-            if((TargetAngle- value)> 10){
-                control.output = -0.25 * control.output;
+            if(Math.abs(TargetAngle- value)> 15){
+                control.output = -0.2 * control.output;
             }else{
-                control.output = -0.15 * control.output;
+                control.output = -0.1 * control.output;
             }
             mecanum.setPowers(-control.output,control.output,-control.output,control.output);
             StaticVars.telemetry.addData("calculated","%5.2f",control.output );
@@ -72,5 +73,7 @@ public class Gyro2023 {
      return AngleUnit.DEGREES.fromUnit(angleUnit, angle);   
     }
 
-
+    void reset(){
+        imu.resetYaw();
+    }
 }

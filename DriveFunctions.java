@@ -54,15 +54,9 @@ public class DriveFunctions {
         //TODO: Implement must()
         //must() for backboard failsafe?
         //now implementation
-        while (mecanum.isMotorsBusy() && opMode.opModeIsActive() && ((StaticVars.clock.seconds()-now)<time))
+        while (mecanum.isMotorsBusy() && ((Main)opMode).must() && ((StaticVars.clock.seconds()-now)<time))
         {
-            opMode.telemetry.addData("FR", mecanum.motors[0].getCurrentPosition());
-            opMode.telemetry.addData("FL", mecanum.motors[1].getCurrentPosition());
-            opMode.telemetry.addData("BL", mecanum.motors[2].getCurrentPosition());
-            opMode.telemetry.addData("BR", mecanum.motors[3].getCurrentPosition());
-            opMode.telemetry.addData("time",time);
-            opMode.telemetry.addData("time running",(StaticVars.clock.seconds()-now));
-            opMode.telemetry.update();
+    
         }
         mecanum.setAllPower(0); 
         mecanum.setMotorMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
@@ -109,7 +103,7 @@ public class DriveFunctions {
         double reading1 = sensor.getDistance(DistanceUnit.INCH);
         double BaseSpeed = 0.1;
         double MinSpeed = 0.05;
-        double MaxSpeed = 0.2;
+        double MaxSpeed = 0.1;
         double buffer = 0.3;
         double range = 3;
         double speed = 0;
