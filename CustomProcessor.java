@@ -1,11 +1,15 @@
 package org.firstinspires.ftc.teamcode;
 
-import org.firstinspires.ftc.vision.VisionProcessor;
+import android.graphics.Bitmap;
+import android.graphics.Color;
+import android.graphics.Paint;
+
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.opencv.core.*;
-import org.opencv.android.*;
+import org.firstinspires.ftc.vision.VisionProcessor;
+import org.opencv.android.Utils;
+import org.opencv.core.Core;
+import org.opencv.core.Scalar;
 import org.opencv.imgproc.Imgproc;
-import android.graphics.*;
 
 
 public class CustomProcessor implements VisionProcessor{

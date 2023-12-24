@@ -83,7 +83,7 @@ public class Manual extends LinearOpMode{
         telemetry.addData("level", level);
         if(fallingEdge(() -> this.gamepad2.left_bumper)){
             if(left_open){
-                left.setPosition(0.4);
+                left.setPosition(0.35);
                 
                 left_open = false;
             }
@@ -126,7 +126,7 @@ public class Manual extends LinearOpMode{
             case 2:{
                 arm1_target = 0;
                 arm2_target = 205;
-                arm3_target =  0.6;
+                arm3_target =  0.7;
             }
             break;
             case 3:{
@@ -150,7 +150,7 @@ public class Manual extends LinearOpMode{
             case 6:{
                 arm1_target = 90;
                 arm2_target = 250;
-                arm3_target =  0.75;
+                arm3_target =  0.85;
             }
             break;
             default:
@@ -173,7 +173,7 @@ public class Manual extends LinearOpMode{
         }
        
        if(fallingEdge(() -> this.gamepad2.y)){
-           arm3_target = 0.4;
+           arm3_target = 0.45;
        }
         
         
@@ -194,11 +194,11 @@ public class Manual extends LinearOpMode{
                 speed_x = speed_x/2;
                 speed_rotate = speed_rotate /2;
             }
-            else if(this.gamepad1.left_trigger > 0.3)
+            else if(this.gamepad1.right_bumper)
             {
-                speed_y = speed_y/3;
-                speed_x = speed_x/3;
-                speed_rotate = speed_rotate /3;
+                speed_y = speed_y * 0.3;
+                speed_x = speed_x* 0.3;
+                speed_rotate = speed_rotate * 0.3;
             }
 
             double angle = Math.toDegrees( Math.atan2(speed_y,speed_x));
@@ -242,7 +242,7 @@ public class Manual extends LinearOpMode{
                 lock();
             
                 }
-            if(fallingEdge(() -> this.gamepad1.right_bumper)){
+            if(this.gamepad1.left_trigger > 0.3){
                 double angle_current = gyro.getOrientation();
                 double Quadrant = (Math.floor(angle_current /90));
                 // if ( Quadrant == -2d)
@@ -320,8 +320,8 @@ public class Manual extends LinearOpMode{
     public boolean must(){
        arm1.setTargetPosition(arm1_target);
         arm2.setTargetPosition(arm2_target);
-        arm1.setPower(getPowerForVoltage(0.95));
-        arm2.setPower(getPowerForVoltage(1));
+        arm1.setPower(getPowerForVoltage(3));
+        arm2.setPower(getPowerForVoltage(3));
         arm1.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         arm2.setMode(DcMotor.RunMode.RUN_TO_POSITION); 
         telemetry.addData("Arm1", arm1.getCurrentPosition());

@@ -12,6 +12,8 @@ import android.graphics.*;
 public class MatDetect implements VisionProcessor{
   
   public long count;
+  public long width;
+  public long height;
   
 
   
@@ -19,6 +21,8 @@ public class MatDetect implements VisionProcessor{
     
     int rowCount = image.rows();
     int columnCount = image.cols();
+   
+    
     
     count = 0;
     for(int rowIndex = 0; rowIndex<rowCount;rowIndex++){
@@ -42,11 +46,12 @@ public class MatDetect implements VisionProcessor{
   }
 
   public void onDrawFrame(android.graphics.Canvas canvas,int width,int height,float scale,float density,java.lang.Object bmp){
-  /*  
+    
     Paint paint = new Paint();
-    paint.setStyle(Paint.Style.FILL);
+    paint.setStyle(Paint.Style.STROKE);
     paint.setColor(Color.WHITE);
-    Bitmap bmp1= (Bitmap) bmp;
-    canvas.drawBitmap(bmp1,0,0,paint);*/
+    canvas.drawRect(50 *scale, 35*scale,70*scale,55 *scale,paint);
+    
+    canvas.drawRect(110 *scale, 35*scale,130*scale,55 *scale,paint);
   }  
 }
