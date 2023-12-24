@@ -50,13 +50,6 @@ public class Drive {
         motors[2].setPower(br);
         motors[3].setPower(bl);
     }
-        public void setAll(double power)
-    {
-        motors[0].setPower(power);
-        motors[1].setPower(power);
-        motors[2].setPower(power);
-        motors[3].setPower(power);
-    }
     
     public void mode(int i)
     {

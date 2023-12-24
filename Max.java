@@ -232,7 +232,7 @@ public class Max extends LinearOpMode {
             telemetry.update();
             
              angles   = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
-           value = getDegree(angles.angleUnit, angles.firstAngle);
+           value = getdegree(angles.angleUnit, angles.firstAngle);
            
            if(Math.abs(value) >4)
             {
@@ -256,7 +256,7 @@ public class Max extends LinearOpMode {
         while ( must()) 
         {
             angles   = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
-           value = getDegree(angles.angleUnit, angles.firstAngle);
+           value = getdegree(angles.angleUnit, angles.firstAngle);
            
            if(Math.abs(value) >4 )
             {
@@ -312,7 +312,7 @@ public class Max extends LinearOpMode {
         
         return opModeIsActive();
     }
-     public void move_across(double target, int direction)
+    public void move_across(double target, int direction)
     {
         double d1 = 0;
         double d2 = 0;
@@ -354,7 +354,7 @@ public class Max extends LinearOpMode {
         while( Math.abs(reading1-target)>buffer && must() && reading1<target)
         {
            angles   = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
-           value = getDegree(angles.angleUnit, angles.firstAngle);
+           value = getdegree(angles.angleUnit, angles.firstAngle);
            
            if(Math.abs(value) >4)
             {
@@ -407,7 +407,7 @@ public class Max extends LinearOpMode {
      do
         {
             angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
-            value = getDegree(angles.angleUnit, angles.firstAngle);
+            value = getdegree(angles.angleUnit, angles.firstAngle);
             continuous_a();
             telemetry.update();
              
@@ -478,7 +478,7 @@ public class Max extends LinearOpMode {
         while( Math.abs(reading1-target)>buffer && must())
         {
            angles   = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
-           value = getDegree(angles.angleUnit, angles.firstAngle);
+           value = getdegree(angles.angleUnit, angles.firstAngle);
            
            if(Math.abs(value) >4)
             {
@@ -523,7 +523,7 @@ public class Max extends LinearOpMode {
         
         
     }
-     public void moveTill_distance(double target, int direction)
+    public void moveTill_distance(double target, int direction)
     {
         double d1 = 0;
         double d2 = 0;
@@ -565,7 +565,7 @@ public class Max extends LinearOpMode {
         while( Math.abs(reading1-target)>buffer && must())
         {
            angles   = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
-           value = getDegree(angles.angleUnit, angles.firstAngle);
+           value = getdegree(angles.angleUnit, angles.firstAngle);
            
            if(Math.abs(value) >4)
             {
@@ -634,6 +634,10 @@ public class Max extends LinearOpMode {
         return Math.sqrt(target/Math.sqrt(2));
     }
     
+    
+    
+   
+    
     double getdegree(AngleUnit angleUnit, double angle)
     {
      return AngleUnit.DEGREES.fromUnit(angleUnit, angle);   
@@ -657,7 +661,7 @@ public class Max extends LinearOpMode {
             telemetry.update();
            
            angles   = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
-           value = getDegree(angles.angleUnit, angles.firstAngle);
+           value = getdegree(angles.angleUnit, angles.firstAngle);
            
            if(Math.abs(value) >4)
             {
@@ -701,7 +705,7 @@ public class Max extends LinearOpMode {
             telemetry.update();
            
            angles   = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
-           value = getDegree(angles.angleUnit, angles.firstAngle);
+           value = getdegree(angles.angleUnit, angles.firstAngle);
            
            if(Math.abs(value) >4)
             {

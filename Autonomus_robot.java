@@ -243,7 +243,7 @@ public class Autonomus_robot extends LinearOpMode
             telemetry.update();
             
              angles   = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
-           value = getDegree(angles.angleUnit, angles.firstAngle);
+           value = getdegree(angles.angleUnit, angles.firstAngle);
            
            if(Math.abs(value) >4)
             {
@@ -266,7 +266,7 @@ public class Autonomus_robot extends LinearOpMode
         while ( must()) 
         {
             angles   = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
-           value = getDegree(angles.angleUnit, angles.firstAngle);
+           value = getdegree(angles.angleUnit, angles.firstAngle);
            
            if(Math.abs(value) >4)
             {
@@ -356,7 +356,7 @@ public class Autonomus_robot extends LinearOpMode
         while( Math.abs(reading1-target)>buffer && must() && reading1<target)
         {
            angles   = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
-           value = getDegree(angles.angleUnit, angles.firstAngle);
+           value = getdegree(angles.angleUnit, angles.firstAngle);
            
            if(Math.abs(value) >4)
             {
@@ -409,7 +409,7 @@ public class Autonomus_robot extends LinearOpMode
      do
         {
             angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
-            value = getDegree(angles.angleUnit, angles.firstAngle);
+            value = getdegree(angles.angleUnit, angles.firstAngle);
             continuous_a();
             telemetry.update();
              
@@ -480,7 +480,7 @@ public class Autonomus_robot extends LinearOpMode
         while( Math.abs(reading1-target)>buffer && must())
         {
            angles   = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
-           value = getDegree(angles.angleUnit, angles.firstAngle);
+           value = getdegree(angles.angleUnit, angles.firstAngle);
            
            if(Math.abs(value) >4)
             {
@@ -567,7 +567,7 @@ public class Autonomus_robot extends LinearOpMode
         while( Math.abs(reading1-target)>buffer && must())
         {
            angles   = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
-           value = getDegree(angles.angleUnit, angles.firstAngle);
+           value = getdegree(angles.angleUnit, angles.firstAngle);
            
            if(Math.abs(value) >4)
             {
@@ -663,7 +663,7 @@ public class Autonomus_robot extends LinearOpMode
             telemetry.update();
            
            angles   = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
-           value = getDegree(angles.angleUnit, angles.firstAngle);
+           value = getdegree(angles.angleUnit, angles.firstAngle);
            
            if(Math.abs(value) >4)
             {
@@ -707,7 +707,7 @@ public class Autonomus_robot extends LinearOpMode
             telemetry.update();
            
            angles   = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
-           value = getDegree(angles.angleUnit, angles.firstAngle);
+           value = getdegree(angles.angleUnit, angles.firstAngle);
            
            if(Math.abs(value) >4)
             {
