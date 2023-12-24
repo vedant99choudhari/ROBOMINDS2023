@@ -90,8 +90,6 @@ public class Drive2023 {
         for(int i =0 ;i <4 ; i++)
         {
             motors[i].setMode(mode);
-            StaticVars.telemetry.addData("motors[i]"," Done");
-            
         }
     }
     

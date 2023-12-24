@@ -10,8 +10,6 @@ import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.HardwareDevice;
 import com.qualcomm.robotcore.hardware.IMU;
 
-import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
-
 @Autonomous
 
 public class Main extends LinearOpMode {
@@ -19,13 +17,12 @@ public class Main extends LinearOpMode {
     private DcMotorEx arm2;
     private DcMotorEx BL;
     private DcMotorEx BR;
-    private ColorSensor colourL;
-    private ColorSensor colourR;
-
+    private ColorSensor COLOURL;
+    private ColorSensor COLOURR;
     private Blinker control_Hub;
-    private DistanceSensor distanceB;
-    private DistanceSensor distanceFL;
-    private DistanceSensor distanceR;
+    private DistanceSensor DISTANCEB;
+    private DistanceSensor DISTANCEL;
+    private DistanceSensor DISTANCER;
     private Blinker expansion_Hub_2;
     private DcMotorEx FL;
     private DcMotorEx FR;
@@ -34,74 +31,35 @@ public class Main extends LinearOpMode {
     private IMU imu;
     Drive2023 mecanum;
     String field = "RED";
-    Gyro2023 gyro;
     // todo: write your code here
-    DriveFunctions movement;
+    
     public void runOpMode(){
-       /* 
+        
         arm1 = hardwareMap.get(DcMotorEx.class, "ARM1");
         arm2 = hardwareMap.get(DcMotorEx.class, "ARM2");
+        String [] motorConfig = {"FR","FL","BR","BL"};
+        mecanum = new Drive2023(hardwareMap, motorConfig);
+        mecanum.setMotorMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
         arm1.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
         arm1.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
         arm2.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
         arm2.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
-        */
-        
-        String [] motorConfig = {"FR","FL","BR","BL"};
-        mecanum = new Drive2023(hardwareMap, motorConfig);
-        
-        StaticVars vars = new StaticVars(telemetry,"RED");
-        
-        
-        mecanum.setMotorMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
-        mecanum.setMotorMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
-        
-        colourL = hardwareMap.get(ColorSensor.class,"COLOURL"); 
-        
-        colourR = hardwareMap.get(ColorSensor.class,"COLOURR"); 
-        
-        
-        distanceFL = hardwareMap.get(DistanceSensor.class,"DISTANCEFL"); 
-        distanceB = hardwareMap.get(DistanceSensor.class,"DISTANCEB");
-        distanceR = hardwareMap.get(DistanceSensor.class,"DISTANCER"); 
-        
-        waitForStart();
-        gyro = new Gyro2023(hardwareMap, mecanum);
+        StaticVars vars = new StaticVars(telemetry);
         
         
         
-        movement = new DriveFunctions(mecanum,gyro,this,hardwareMap);
         boolean flag = true;
-        
-        gyro.TargetAngle = 0.0;
-        //movement.moveTill(0.0,3.0,false);
+        waitForStart();
         
         while((opModeIsActive() && flag)){
         
-            //telemetry.addData("key" , "test");
-        
+            telemetry.addData("key" , "test");
+            moveTill(0.0,10.0,false);
             
-            //lock();
-           
-        
-            // movement.moveTill(10d,12d,true);
-            gyro.TargetAngle = -90.0;
-            //movement.moveTill(0d,12d,false);
-            //movement.moveTill(3d,0d,false);
-            //movement.moveTill();
-            //movement.moveTill();
-            lock();
-             movement.moveTillDistance(15,0,distanceFL);
-            //movement.moveTillDistance(12,0);
             flag = false;
-            
-            //telemetry.update();
-        }
-        while(opModeIsActive()){
-            telemetry.addData("Distance",distanceFL.getDistance(DistanceUnit.INCH));
-            telemetry.addData("Gyro",gyro.getOrientation());
             telemetry.update();
         }
+        
     }
         /**
      * Moves the robot in the x and y direction
@@ -110,8 +68,6 @@ public class Main extends LinearOpMode {
      * @param  y_in      the y value in inches
      * @param  timedFailSafe     whether to have a time failsafe
      */
-     
-     
     public void moveTill(Double x_in, Double y_in, boolean timedFailSafe){
         int x_enc = ((Number)(x_in * -24.053125)).intValue();
         int y_enc = ((Number)(y_in * -24.053125)).intValue();
@@ -156,16 +112,6 @@ public class Main extends LinearOpMode {
         
         
         return Math.sqrt(target/Math.sqrt(2));
-    }
-    
-    void lock(){
-        int counter = 0;
-        do{
-            counter++;
-            telemetry.addData("Counter",counter);
-            telemetry.update();
-        }while(gyro.angularLock() && opModeIsActive());
-        mecanum.setAllPower(0.0);
     }
 
     
