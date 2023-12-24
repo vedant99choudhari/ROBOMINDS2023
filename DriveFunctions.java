@@ -118,9 +118,8 @@ public class DriveFunctions {
         opMode.telemetry.update();
                 
         double value;        
-        while( Math.abs(reading1-target)>buffer && opMode.opModeIsActive()){
+        while( Math.abs(reading1-target)>buffer && ((Main)opMode).must()){
             value = gyro.getOrientation();
-            ((Main)opMode).movearm2(158);
            
             if(Math.abs(value) >4){
                gyro.continousA();

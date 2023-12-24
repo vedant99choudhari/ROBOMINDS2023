@@ -11,7 +11,7 @@ import com.qualcomm.robotcore.hardware.Blinker;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.HardwareDevice;
 import com.qualcomm.robotcore.hardware.IMU;
-
+import java.util.concurrent.TimeUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
 @Autonomous
@@ -41,6 +41,8 @@ public class Main extends LinearOpMode {
     private Servo right;
     private Servo left;
     private Servo arm3;
+    int arm1_target;
+    int arm2_target;
     // todo: write your code here
     DriveFunctions movement;
     public void runOpMode(){
@@ -53,7 +55,7 @@ public class Main extends LinearOpMode {
         arm1.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
         arm2.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
         arm2.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
-        
+        arm2.setDirection(DcMotorEx.Direction.REVERSE);
         ControlHub_VoltageSensor = hardwareMap.get(VoltageSensor.class, "Control Hub");
         
         right = hardwareMap.get(Servo.class, "right");
@@ -82,7 +84,7 @@ public class Main extends LinearOpMode {
         
         right.setPosition(0);
         left.setPosition(0.9);
-        arm3.setPosition(0.3);
+        
         waitForStart();
         gyro = new Gyro2023(hardwareMap, mecanum);
         
@@ -95,21 +97,38 @@ public class Main extends LinearOpMode {
         
         while((opModeIsActive() && flag)){
         
-        
-            
-            lock();
-           
-        
-            movement.moveTill(0d,28d,true);
-            gyro.TargetAngle = -90.0;
-            left.setPosition(0.3);
-            movement.moveTill(0d,-4d,true);
-            lock();
-            //movement.moveTillDistance(10,0,distanceFL);
-            //movement.moveTillDistance(24,3,distanceR);
-            while (!(movearm2(158)) && opModeIsActive()){
+            arm3.setPosition(0.3);
+            String element = "LEFT";
+            movement.moveTill(0d,25d,true);
+            if(element == "RIGHT"){
+                gyro.TargetAngle = -90.0;
+                lock();
+                left.setPosition(0.3);
+            }else if (element == "CENTER"){
+                movement.moveTill(0d,3d,true);
+                left.setPosition(0.3);
+                movement.moveTill(0d,-3d,true);
+                gyro.TargetAngle = -90.0;
+                lock();
+            }else{
+                gyro.TargetAngle = 90.0;
+                lock();
+                left.setPosition(0.3);
+                gyro.TargetAngle = -90.0;
+                lock();
+            }
+            movement.moveTillDistance(10,0,distanceFL);
+            if(element == "RIGHT"){
+            movement.moveTillDistance(24,3,distanceR);
+            }else if(element == "CENTER"){
+                movement.moveTillDistance(30,3,distanceR);
+            }else{
+                movement.moveTillDistance(36,3,distanceR);
+            }
+            //First level with right
+            arm2_target = 140;
+            while (movearm2() && must()){
                 telemetry.update();
-                
             
             }
             
@@ -118,24 +137,132 @@ public class Main extends LinearOpMode {
             movement.moveTillDistance(11,0,distanceFL);
             right.setPosition(0.5);
             
-            movearm2(158);
+            
+            /* for centerstage
+            arm2_target = 158;
             movement.moveTillDistance(18,0,distanceFL);
-            while (!(movearm2(158)) && opModeIsActive()){
+            while (movearm2() && must()){
                 telemetry.update();
                 
             
-            }
-            flag = false;
+            }*/
+            /* //For Level 2
+            arm2_target = 160;
+            while (movearm2() && must()){
+                telemetry.update();
             
+            }
+            
+            
+            arm3.setPosition(0.58);
+            
+            movement.moveTillDistance(9.75,0,distanceFL);
+            
+            right.setPosition(0.5);*/
+            //for level 3
+            /* 
+            arm2_target = 180;
+            while (movearm2() && must()){
+                telemetry.update();
+            }
+            telemetry.update();
+            //wait(5);
+            
+            arm3.setPosition(0.6);
+            
+            movement.moveTillDistance(8.7,0,distanceFL);
+            
+            right.setPosition(0.5);
+            
+
+            */
+            /* for level 4
+            int counter = 0;
+            arm2_target = 200;
+            boolean test = movearm2();
+            while (test && must()){
+                counter++;
+                test = movearm2();
+                telemetry.addData("count", counter);
+                telemetry.addData("bool", test);
+                telemetry.addData("opActive", must());
+                telemetry.update();
+            }
+            counter++;
+            telemetry.addData("count", counter);
+            telemetry.addData("bool", test);
+            telemetry.addData("opActive", must());
+            telemetry.update();
+            arm3.setPosition(0.73);
+            movement.moveTillDistance(4.2,0,distanceFL);
+            right.setPosition(0.5);
+            */
+            /* Level 5
+            int counter = 0;
+            arm1_target = 80;
+            arm2_target = 170;
+            while ((movearm1() || movearm2())&& must()){
+                telemetry.update();
+                counter++;
+            telemetry.addData("count", counter);
+            telemetry.update();
+            }
+            telemetry.update();
+            //wait(5);
+            
+            arm3.setPosition(0.75);
+            movement.moveTillDistance(5.75,0,distanceFL);
+            
+            right.setPosition(0.5);
+            */
+            /* Level 6
+            int counter = 0;
+            arm1_target = 90;
+            arm2_target = 180;
+            while ((movearm1() || movearm2())&& must()){
+                telemetry.update();
+                counter++;
+            telemetry.addData("count", counter);
+            telemetry.update();
+            }
+            telemetry.update();
+            //wait(5);
+            
+            movement.moveTillDistance(2.7,0,distanceFL);
+            arm3.setPosition(0.75);
+            wait(1);
+            right.setPosition(0.5);
+            */
+            /*
+            movement.moveTillDistance(14,0,distanceFL);
+            arm3.setPosition(0.4);
+            arm1_target = 0;
+            arm2_target = 0;
+            while ((movearm1() || movearm2())&& must()){
+                telemetry.update();
+                counter++;
+            telemetry.addData("count", counter);
+            telemetry.update();
+            
+            }*/
+            flag = false;
             //telemetry.update();
         }
        
-        while(opModeIsActive()){
+        while(must()){
             telemetry.addData("Distance",distanceFL.getDistance(DistanceUnit.INCH));
             telemetry.addData("Gyro",gyro.getOrientation());
             telemetry.addData("Arm2 Encoder: ", arm2.getCurrentPosition());
             telemetry.update();
         }
+    }
+    
+    public void wait(int seconds){
+        long now = StaticVars.clock.now(TimeUnit.SECONDS);
+            while((StaticVars.clock.now(TimeUnit.SECONDS) - now < seconds) && must()){
+            telemetry.addData("Elapsed Time",(StaticVars.clock.now(TimeUnit.SECONDS) - now));
+            telemetry.addData("Arm2 Encoder: ", arm2.getCurrentPosition());
+            }
     }
         /**
      * Moves the robot in the x and y direction
@@ -144,28 +271,65 @@ public class Main extends LinearOpMode {
      * @param  y_in      the y value in inches
      * @param  timedFailSafe     whether to have a time failsafe
      */
-    public boolean movearm2(int target){
-        int position = arm2.getCurrentPosition();
-        double angle =(position*-1);
+    public boolean movearm1(){
+        int position = arm1.getCurrentPosition();
+        double angle = (position*1);
         telemetry.addData("Arm position" , position);
         telemetry.addData("Arm angle" , angle);
-        telemetry.addData("Arm angle" , angle);
-        if(target - angle < 10){
-            arm2.setPower(-getPowerForVoltage(0.01));
-            return true;
+        double error = arm1_target - angle;
+        int multiplier = 1;
+        if (error < 0){
+            multiplier = -1;
         }
-        else{
-            arm2.setPower(-getPowerForVoltage(0.6));
+        if(Math.abs(error ) < 4){
+            arm1.setPower(getPowerForVoltage(0.01) * multiplier);
+            telemetry.addData("","Holding");
             return false;
         }
+        else{
+            arm1.setPower(getPowerForVoltage(0.8)* multiplier);
+            telemetry.addData("","Moving");
+            return true;
+        }
     }
-     
+    
+public boolean movearm2(){
+        int position = arm2.getCurrentPosition();
+        double angle = (position*1);
+        telemetry.addData("Arm position" , position);
+        telemetry.addData("Arm angle" , angle);
+        double error = arm2_target - angle;
+        telemetry.addData("error" , error);
+        int multiplier = 1;
+        if (error < 0){
+            multiplier = -1;
+        }
+        if(Math.abs(error) < 4){
+            arm2.setPower(getPowerForVoltage(0.03) * multiplier);
+            telemetry.addData("","Holding");
+            return false;
+        }
+        else{
+            arm2.setPower(getPowerForVoltage(0.4)* multiplier);
+            telemetry.addData("","Moving");
+
+            return true;
+        }
+        
+    }
+    
     double getPowerForVoltage(double voltage){
         double power = voltage/ControlHub_VoltageSensor.getVoltage();
         telemetry.addData("Motor Power:" , power);
-        telemetry.update();
         return power;
     }
+    
+    public boolean must(){
+        movearm1();
+        movearm2();
+        return opModeIsActive();
+    }
+
     
     public void moveTill(Double x_in, Double y_in, boolean timedFailSafe){
         int x_enc = ((Number)(x_in * -24.053125)).intValue();
