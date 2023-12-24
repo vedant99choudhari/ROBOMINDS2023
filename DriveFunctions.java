@@ -93,7 +93,7 @@ public class DriveFunctions {
         }
 
         double reading1 = sensor.getDistance(DistanceUnit.INCH);
-        double BaseSpeed = 0.1;
+        double BaseSpeed = 0.15;
         double MinSpeed = 0.07;
         double MaxSpeed = 0.15;
         double buffer = 0.3;

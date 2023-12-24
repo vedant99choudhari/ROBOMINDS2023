@@ -86,8 +86,9 @@ public class Main extends LinearOpMode {
         distanceL = hardwareMap.get(DistanceSensor.class,"DISTANCEL");
 
 
-        right.setPosition(0);
-        left.setPosition(0.9);
+        right.setPosition(0.35);
+        left.setPosition(0.5);
+        arm3.setPosition(0.45);
 
 
         initCamera();
@@ -109,7 +110,7 @@ public class Main extends LinearOpMode {
             arm2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             arm3.setPosition(0.2);
 
-            TeamElement element = TeamElement.CENTER;
+            TeamElement element = TeamElement.LEFT;
             
             if(element == TeamElement.RIGHT)
               movement.moveTill(24d,0d,true);  
@@ -154,8 +155,8 @@ public class Main extends LinearOpMode {
             movement.moveTillDistance(8,0,distanceFR);
             arm3.setPosition(0.6);
             wait(1000000000);
-            right.setPosition(0.6);
-
+            right.setPosition(0.55);
+            wait(1000000000);
 
 
 

@@ -174,6 +174,7 @@ public class Manual extends LinearOpMode{
 
         if(fallingEdge(() -> this.gamepad2.y)){
             arm3_target = 0.45;
+            arm2_target = -15;
         }
 
 
