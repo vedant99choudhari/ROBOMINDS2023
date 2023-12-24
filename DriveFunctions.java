@@ -44,21 +44,24 @@ public class DriveFunctions {
     public void moveTill(Double x_in, Double y_in, boolean timedFailSafe){
         int x_enc = ((Number)(x_in * 24.053125)).intValue();
         int y_enc = ((Number)(y_in * -24.053125)).intValue();
+        double now = StaticVars.clock.seconds(); 
         double power = 0.07;
         mecanum.setMotorMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
         double displacement = setTargets(x_enc,y_enc);
-        double time = displacement / 17;
+        double time = displacement / 140;
         mecanum.setMotorMode(DcMotorEx.RunMode.RUN_TO_POSITION);
         mecanum.setAllPower(power);
         //TODO: Implement must()
         //must() for backboard failsafe?
         //now implementation
-        while (mecanum.isMotorsBusy() && opMode.opModeIsActive() )
+        while (mecanum.isMotorsBusy() && opMode.opModeIsActive() && ((StaticVars.clock.seconds()-now)<time))
         {
             opMode.telemetry.addData("FR", mecanum.motors[0].getCurrentPosition());
             opMode.telemetry.addData("FL", mecanum.motors[1].getCurrentPosition());
             opMode.telemetry.addData("BL", mecanum.motors[2].getCurrentPosition());
             opMode.telemetry.addData("BR", mecanum.motors[3].getCurrentPosition());
+            opMode.telemetry.addData("time",time);
+            opMode.telemetry.addData("time running",(StaticVars.clock.seconds()-now));
             opMode.telemetry.update();
         }
         mecanum.setAllPower(0); 
@@ -79,9 +82,6 @@ public class DriveFunctions {
     public void moveTillDistance(double target, int direction, DistanceSensor sensor){
         double d1 = 0;
         double d2 = 0;
-        do{
-            opMode.telemetry.update();
-        }while(gyro.angularLock() && opMode.opModeIsActive());
         
         if(StaticVars.field == "RED"){
             if(direction == 1)direction = 3;
@@ -109,7 +109,7 @@ public class DriveFunctions {
         double reading1 = sensor.getDistance(DistanceUnit.INCH);
         double BaseSpeed = 0.1;
         double MinSpeed = 0.05;
-        double MaxSpeed = 0.05;
+        double MaxSpeed = 0.2;
         double buffer = 0.3;
         double range = 3;
         double speed = 0;
@@ -120,6 +120,7 @@ public class DriveFunctions {
         double value;        
         while( Math.abs(reading1-target)>buffer && opMode.opModeIsActive()){
             value = gyro.getOrientation();
+            ((Main)opMode).movearm2(158);
            
             if(Math.abs(value) >4){
                gyro.continousA();
@@ -152,13 +153,92 @@ public class DriveFunctions {
         }     
 
         reading1 = sensor.getDistance(DistanceUnit.INCH);
-        
+        opMode.telemetry.addData("distance",reading1);
+        opMode.telemetry.update();
         mecanum.setPowers(0,0,0,0);
         
         
     }
     
-    
+// public void moveTillDistance(double target, Direction direction, DistanceSensor sensor){
+//         double d1 = 0;
+//         double d2 = 0;
+        
+//         if(StaticVars.field == "RED"){
+//             if(direction == 1)direction = 3;
+//             else if(direction == 3) direction = 1;
+//         }
+        
+        
+//         if (direction==0)
+//         {
+//           d1 = -1;
+//           d2 = -1;
+//         }
+//         else if (direction == 1)
+//         {
+//           d1 = 1;
+//           d2 = -1;
+//         }else if (direction == 2){
+//             d1 = 1;
+//           d2 = 1;
+//         }else{
+//             d1 = -1;
+//           d2 = 1;
+//         }
+        
+//         double reading1 = sensor.getDistance(DistanceUnit.INCH);
+//         double BaseSpeed = 0.1;
+//         double MinSpeed = 0.05;
+//         double MaxSpeed = 0.05;
+//         double buffer = 0.3;
+//         double range = 3;
+//         double speed = 0;
+        
+//         opMode.telemetry.addData("distance",reading1);
+//         opMode.telemetry.update();
+                
+//         double value;        
+//         while( Math.abs(reading1-target)>buffer && opMode.opModeIsActive()){
+//             value = gyro.getOrientation();
+           
+//             if(Math.abs(value) >4){
+//               gyro.continousA();
+//             }
+            
+//             reading1 = sensor.getDistance(DistanceUnit.INCH);
+            
+//             if(Math.abs(reading1 - target) >range){
+//                 BaseSpeed = MaxSpeed;
+//             }else {
+//              BaseSpeed = 0.01 * Math.abs(reading1 - target);
+//              if(BaseSpeed < MinSpeed)
+//              {
+//                  BaseSpeed = MinSpeed;
+//              }
+//             }
+            
+//             if (reading1 >target){
+//                 speed = -1*BaseSpeed;
+//             }else{
+//               speed = 1 * BaseSpeed;
+//             }
+               
+//             mecanum.setPowers(d1*speed,d2*speed,d2*speed,d1*speed);   
+            
+//             opMode.telemetry.addData("distance",reading1);
+//             opMode.telemetry.update();
+            
+            
+//         }     
+
+//         reading1 = sensor.getDistance(DistanceUnit.INCH);
+//         opMode.telemetry.addData("distance",reading1);
+//         opMode.telemetry.update();
+//         mecanum.setPowers(0,0,0,0);
+        
+        
+//     }    
     
     double setTargets(int target_x , int target_y)
     {
@@ -180,7 +260,7 @@ public class DriveFunctions {
         mecanum.motors[3].setTargetPosition(d2);
         
         
-        return Math.sqrt(target/Math.sqrt(2));
+        return target/Math.sqrt(2);
     }
 
 }
